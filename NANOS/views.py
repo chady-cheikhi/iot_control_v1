@@ -13,13 +13,13 @@ from API.models import NanoIoT
 class Index(View):
     def get(self, request):
         return render(request, 'index.html')
-
-
 class Nano(View):
     def get(self, request, hostname):
         functionalities = ['custom_cmd', 'reboot', 'screenshot', 'show_dashboard', 'show_video']
         nano = NanoIoT.objects.all().get(hostname=hostname)
         nano.what = ''
+        nano.custom_cmd = None
+        nano.save()
         return render(request, 'nano_reactive.html',
                       {'functionalities': functionalities,
                        'hostname': hostname})

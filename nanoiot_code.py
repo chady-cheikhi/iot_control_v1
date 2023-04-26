@@ -4,9 +4,9 @@ import subprocess
 import time
 
 """ '/' important at the end of the link"""
-
+url = 'http://192.168.56.1:8000/'
 nano_name = 'test'
-what_url = 'http://192.168.56.1:8000/api/nano/' + nano_name
+what_url = url + 'api/nano/' + nano_name
 show_dashboard_url = 'http://192.168.56.1:8000/api/nano/' + nano_name + '/show_dashboard'
 # status_url=
 cmd_old = ''
