@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ hostname }}Screenshot</title>
+</head>
+<body>
+<h1> Ce pop-up ne doit pas rester ouvert pour une longue durée</h1>
+<img id="screenshot-image" src="" width="700" height="400" alt="Screenshot">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+<script>
+    function getScreenshot(){
+            $.ajax({
+                type: 'GET',
+                url: '/screenshot/screenshot.png',
+                success: function(response) {
+                    $('#screenshot-image').attr('src', '/screenshot/screenshot.png?' + new Date().getTime());
+                },
+                error: function(response){
+                    alert('error');
+                }
+            })
+        }
+    getScreenshot()
+    setInterval(getScreenshot,3000);
+</script>
+</body>
+</html>
