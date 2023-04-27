@@ -13,21 +13,29 @@ class ControlNano:
         self._cmd_old = ''
         self._terminal_url = url + 'api/nano/' + nano_name + '/terminal'
         self._show_dashboard_url = url + 'api/nano/' + nano_name + '/show_dashboard'
+        self._old_cmd = ''
 
     def what(self):
-        return requests.get(self._what_url).json().get('what')
+        try:
+            what = requests.get(self._what_url, timeout=5).json().get('what')
+            print('\n-----------------------success : waiting for action-----------------------\n')
+            return requests.get(self._what_url, timeout=5).json().get('what')
+        except requests.exceptions.ConnectionError:
+            print("\n-----------------------couldn't get action-----------------------\n")
 
     def custom_cmd(self):
-        _cmd = requests.get(self._terminal_url).json().get('custom_cmd')
-        _old_cmd = ''
-        if _cmd != _old_cmd and _cmd != None:
+        _cmd = requests.get(self._terminal_url, timeout=5).json().get('custom_cmd')
+        if _cmd != self._old_cmd:
+            self._old_cmd = _cmd
             os.system(_cmd)
             _suc_cmd = subprocess.run(_cmd, stdout=subprocess.PIPE, shell=True).stdout.decode()
             _err_cmd = subprocess.run(_cmd, stderr=subprocess.PIPE, shell=True).stderr.decode()
             result = _suc_cmd if _suc_cmd != '' else _err_cmd
+            result = result.replace('\n', '<br>')
             payload = {'custom_cmd_output': result, 'custom_cmd': _cmd}
-            _old_cmd = _cmd
-            requests.post(self._terminal_url, data=payload)
+        else:
+            print("same command wouldn't be executed")
+        requests.post(self._terminal_url, data=payload)
 
     def screenshot(self):
         _name = 'screenshot.png'
@@ -39,13 +47,13 @@ class ControlNano:
             requests.post(self._what_url, files=_image)
 
     def show_dashboard(self):
-        _dashboard_link = requests.get(self._show_dashboard_url).json().get('dashboard_link')
+        _dashboard_link = requests.get(self._show_dashboard_url, timeout=5).json().get('dashboard_link')
         with open('./Desktop/pageweb_redemarrage.sh', 'r') as test:
             lines = test.readlines()
         lines[lines.index('firefox\n') + 1] = _dashboard_link + '\n'
         with open('./Desktop/pageweb_redemarrage.sh', 'w') as test:
             test.writelines(lines)
-
+        print(f'dashboard: {_dashboard_link} will be shown after reboot')
         data = {'what': ''}
         requests.post(self._what_url, data)
 
@@ -55,33 +63,35 @@ class ControlNano:
         subprocess.run(_reboot_cmd, stdout=subprocess.PIPE, shell=True).stdout.decode()
 
     def show_video(self):
-        print('show the video')
         data = {'what': ''}
         requests.post(self._what_url, data)
 
     def controls(self):
         while True:
-            try:
-                what = self.what()
-                if what == 'show_video':
-                    self.show_video()
+            what = self.what()
+            if what == 'show_video':
+                print('\ncommand: show_video\n')
+                self.show_video()
 
-                elif what == 'show_dashboard':
-                    self.show_dashboard()
+            elif what == 'show_dashboard':
+                print('\ncommand: show_dashboard\n')
+                self.show_dashboard()
 
-                elif what == 'reboot':
-                    self.reboot()
+            elif what == 'reboot':
+                print('\ncommand: reboot\n')
+                self.reboot()
 
-                elif what == 'screenshot':
-                    self.screenshot()
+            elif what == 'screenshot':
+                print('\ncommand: screenshot\n')
+                self.screenshot()
 
-                elif what == 'custom_cmd':
-                    self.custom_cmd()
+            elif what == 'custom_cmd':
+                print('\ncommand: custom_cmd\n')
+                self.custom_cmd()
+            time.sleep(2)
 
-                time.sleep(2)
-            except:
-                print('no')
-                time.sleep(2)
+
+
 
 
 
