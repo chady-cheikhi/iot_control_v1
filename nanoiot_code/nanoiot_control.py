@@ -1,7 +1,7 @@
 import time
-from NanoIotController import ControlNano
+from NanoIotController import NanoIot
 
-nano_test = ControlNano('test', 'http://192.168.56.1:8000/')
+nano_test = NanoIot('test', 'http://192.168.56.1:8000/')
 
 nano_test.controls()
 

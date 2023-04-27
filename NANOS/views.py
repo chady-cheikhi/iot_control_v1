@@ -13,10 +13,14 @@ from API.models import NanoIoT
 class Index(View):
     def get(self, request):
         return render(request, 'index.html')
+
+
 class Nano(View):
     def get(self, request, hostname):
-        functionalities = ['custom_cmd', 'reboot', 'screenshot', 'show_dashboard', 'show_video']
+        functionalities = ['custom_cmd', 'reboot', 'screenshot', 'show_dashboard', 'show_video', 'change_resolution']
         nano = NanoIoT.objects.all().get(hostname=hostname)
+        where = NanoIoT.objects.all().filter(where='emb')
+        print(where)
         nano.what = ''
         nano.custom_cmd = None
         nano.save()
@@ -39,7 +43,7 @@ class Terminal(View):
 
 class Screenshot(View):
     def get(self, request, hostname):
-        return render(request, 'screenshot.html', {'hostname':hostname})
+        return render(request, 'screenshot.html', {'hostname': hostname})
 
 
 

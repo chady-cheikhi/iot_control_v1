@@ -5,5 +5,5 @@ urlpatterns = [
     path("all-nanos", Index.as_view(), name='index'),
     path("nano/<str:hostname>/terminal", Terminal.as_view(), name='page-nano'),
     path("nano/<str:hostname>", Nano.as_view(), name='nano'),
-    path("nano/<str:hostname>/screenshot", Screenshot.as_view(), name='screenshot')
+    path("nano/<str:hostname>/screenshot", Screenshot.as_view(), name='screenshot'),
 ]

@@ -4,7 +4,7 @@ import subprocess
 import time
 
 
-class ControlNano:
+class NanoIot:
     def __init__(self, nano_name, url):
         self._nano_name = nano_name
         self._url = url
@@ -25,7 +25,7 @@ class ControlNano:
 
     def custom_cmd(self):
         _cmd = requests.get(self._terminal_url, timeout=5).json().get('custom_cmd')
-        if _cmd != self._old_cmd:
+        if _cmd != self._old_cmd and _cmd is not None:
             self._old_cmd = _cmd
             os.system(_cmd)
             _suc_cmd = subprocess.run(_cmd, stdout=subprocess.PIPE, shell=True).stdout.decode()
@@ -33,14 +33,16 @@ class ControlNano:
             result = _suc_cmd if _suc_cmd != '' else _err_cmd
             result = result.replace('\n', '<br>')
             payload = {'custom_cmd_output': result, 'custom_cmd': _cmd}
+            requests.post(self._terminal_url, data=payload)
         else:
             print("same command wouldn't be executed")
-        requests.post(self._terminal_url, data=payload)
 
     def screenshot(self):
         _name = 'screenshot.png'
         _command = f'gnome-screenshot --file="{_name}"'
-        subprocess.call(_command, shell=True)
+        payload = {'custom_cmd_output': '', 'custom_cmd': _command}
+        requests.post(self._terminal_url, data=payload)
+        self.custom_cmd()
         with open(_name, 'rb') as f:
             _image_data = f.read()
             _image = {'screenshot': _image_data}
@@ -88,6 +90,11 @@ class ControlNano:
             elif what == 'custom_cmd':
                 print('\ncommand: custom_cmd\n')
                 self.custom_cmd()
+            elif what == '' or what is None:
+                print()
+            else:
+                print('\n----unkown action----\n')
+
             time.sleep(2)
 
 

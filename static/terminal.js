@@ -1,7 +1,9 @@
 var hostnameDiv = document.getElementById('hostname');
 var hostname = hostnameDiv.getAttribute('data-my-arg1');
 
-$(document).on("submit","#terminal",function(e){
+$(document).on("submit","#terminal",valuePost);
+
+function valuePost(e){
         e.preventDefault();
         $.ajax({
             type: 'POST',
@@ -15,7 +17,7 @@ $(document).on("submit","#terminal",function(e){
                 console.log(data['status'])
             }
         })
-    });
+    }
 function terminal(){
         $.ajax({
             type: 'GET',
@@ -34,5 +36,6 @@ function terminal(){
             }
         })
     }
+
 
 setInterval(terminal,2000);
