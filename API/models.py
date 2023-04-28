@@ -24,10 +24,12 @@ class NanoIoT(models.Model):
     defined_cmds = models.CharField(max_length=20, choices=cmds, blank=True, null=True)
     what = models.TextField(max_length=100, default='cusm_cmd')
     where = models.CharField(max_length=20, choices=where, default='unknown')
-    image = models.ImageField(upload_to='', null=True, blank=True)
+    image = models.ImageField(upload_to='', null=True)
     dashboard_link = models.CharField(max_length=255, default='http://10.106.134.210:8080/d/lpU4hW3Mz/dashboard-montage2?orgId=1&refresh=1m&kiosk')
 
     def __str__(self):
         return self.hostname
+
+
 
 

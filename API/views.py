@@ -57,7 +57,8 @@ class DefinedFct(View):
             nano.image.delete(save=True)
             try:
                 screenshot = request.FILES['screenshot']
-                screenshot_name = 'screenshot.png'
+                screenshot_name = 'screenshot_'+request.POST['image_name']+'.png'
+                print(screenshot_name)
                 nano.image.save(screenshot_name, screenshot)
                 nano.what = ''
             except:
@@ -70,7 +71,7 @@ class DefinedFct(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class Functionality(View):
-    def get(self, request, hostname,functionality):
+    def get(self, request, hostname, functionality):
         nano = NanoIoT.objects.all().get(hostname=hostname)
         return JsonResponse({'hostname': hostname,
                              'what': nano.what,

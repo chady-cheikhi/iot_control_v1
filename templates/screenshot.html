@@ -15,9 +15,9 @@
     function getScreenshot(){
             $.ajax({
                 type: 'GET',
-                url: '/screenshot/screenshot.png',
+                url: '/screenshot/{{image.name}}',
                 success: function(response) {
-                    $('#screenshot-image').attr('src', '/screenshot/screenshot.png?' + new Date().getTime());
+                    $('#screenshot-image').attr('src', '/screenshot/{{ image }}?' + new Date().getTime());
                 },
                 error: function(response){
                     alert('error');

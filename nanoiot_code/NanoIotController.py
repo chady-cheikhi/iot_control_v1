@@ -19,7 +19,7 @@ class NanoIot:
         try:
             what = requests.get(self._what_url, timeout=5).json().get('what')
             print('\n-----------------------success : waiting for action-----------------------\n')
-            return requests.get(self._what_url, timeout=5).json().get('what')
+            return what
         except requests.exceptions.ConnectionError:
             print("\n-----------------------couldn't get action-----------------------\n")
 
@@ -38,15 +38,14 @@ class NanoIot:
             print("same command wouldn't be executed")
 
     def screenshot(self):
-        _name = 'screenshot.png'
-        _command = f'gnome-screenshot --file="{_name}"'
-        payload = {'custom_cmd_output': '', 'custom_cmd': _command}
-        requests.post(self._terminal_url, data=payload)
-        self.custom_cmd()
+        _name = f'screenshot_{self._nano_name}.png'
+        _command = f'gnome-screenshot --file={_name}'
+        subprocess.call(_command, shell=True)
         with open(_name, 'rb') as f:
             _image_data = f.read()
             _image = {'screenshot': _image_data}
-            requests.post(self._what_url, files=_image)
+            _image_name = {'image_name': self._nano_name}
+            requests.post(self._what_url, files=_image, data=_image_name)
 
     def show_dashboard(self):
         _dashboard_link = requests.get(self._show_dashboard_url, timeout=5).json().get('dashboard_link')

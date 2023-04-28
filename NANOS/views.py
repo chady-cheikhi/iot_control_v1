@@ -53,7 +53,11 @@ class Terminal(View):
 
 class Screenshot(View):
     def get(self, request, hostname):
-        return render(request, 'screenshot.html', {'hostname': hostname})
+        nano = NanoIoT.objects.get(hostname=hostname)
+        image = nano.image
+        print(image.name)
+        return render(request, 'screenshot.html', {'hostname': hostname,
+                                                   'image': image})
 
 
 
