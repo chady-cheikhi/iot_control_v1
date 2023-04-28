@@ -12,32 +12,42 @@ from API.models import NanoIoT
 
 class Index(View):
     def get(self, request):
-        return render(request, 'index.html')
+        where_dict = {}
+        for place in NanoIoT.where_list:
+            where_dict[place] = list(NanoIoT.objects.filter(where=place).values_list('hostname', flat=True))
+        return render(request, 'index.html', {'where_dict': where_dict})
 
 
 class Nano(View):
     def get(self, request, hostname):
         functionalities = ['custom_cmd', 'reboot', 'screenshot', 'show_dashboard', 'show_video', 'change_resolution']
         nano = NanoIoT.objects.all().get(hostname=hostname)
-        where = NanoIoT.objects.all().filter(where='emb')
-        print(where)
+        where_dict = {}
+        for place in NanoIoT.where_list:
+            where_dict[place] = list(NanoIoT.objects.filter(where=place).values_list('hostname', flat=True))
         nano.what = ''
         nano.custom_cmd = None
         nano.save()
         return render(request, 'nano_reactive.html',
                       {'functionalities': functionalities,
-                       'hostname': hostname})
+                       'hostname': hostname,
+                       'where_dict': where_dict
+                       }
+                      )
 
 
 class Terminal(View):
     def get(self, request, hostname):
-        print('test')
+        where_dict = {}
+        for place in NanoIoT.where_list:
+            where_dict[place] = list(NanoIoT.objects.filter(where=place).values_list('hostname', flat=True))
         nano = NanoIoT.objects.all().get(hostname=hostname)
         nano.custom_cmd = None
         nano.custom_cmd_output = None
         nano.save()
         return render(request, "terminal.html", {
-            'hostname': hostname
+            'hostname': hostname,
+            'where_dict': where_dict
         })
 
 

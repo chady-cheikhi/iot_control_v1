@@ -1,7 +1,10 @@
 {% load static %}
 {% block header %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    {{ hostname }}
+
+        {{ arg1 }}
+        {{ arg2 }}
+
         <a class="navbar-brand" href="#">
             <img src="{% static 'logo_carre.png' %}" width="70" height="70" alt="Photo_logo">
         </a>
