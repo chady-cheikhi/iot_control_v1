@@ -1,0 +1,5 @@
+Django==2.2.16
+django-admin-generator
+PyInstaller
+mysqlclient
+Pillow==9.4.0
