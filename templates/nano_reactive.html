@@ -84,27 +84,32 @@
 
 
 {% for functionality in functionalities %}
-<div class="container-fluid">
-    <form id="{{ functionality }}" class="row align-items-center justify-content-center" style="margin: 1%" method="post">
-        <h2> {{ functionality.title }} :</h2>
-        {% if functionality == "show_dashboard" %}
-        <div class="input-group col-4">
-            <input id="dashboard-link" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">
-        </div>
-        {% endif %}
-        <button type="submit" {% if functionality == 'screenshot' %} {% endif %} class="btn btn-custom btn-primary ml-3">{{ functionality|title }}</button>
-    </form >
-</div>
+    <div class="container-fluid">
+        <form id="{{ functionality }}" class="row align-items-center justify-content-center" style="margin: 1%" method="post">
+            <h2> {{ functionality.title }} :</h2>
+            {% if functionality == "show_dashboard" %}
+                <div class="input-group col-4">
+                    <input id="dashboard-link" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">
+                </div>
+            {% elif functionality == "change_resolution" %}
+
+                <div class="input-group mt-1 w-25">
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Resolution</label>
+                  </div>
+                  <select class="custom-select" id="change-resolution">
+                    {% for resolution in resolutions %}
+                      <option value="{{ resolution }}"> {{ resolution }} </option>
+                    {% endfor %}
+                  </select>
+                </div>
+
+            {% endif %}
+            <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-primary ml-3">{{ functionality|title }}</button>
+        </form >
+    </div>
 
 {% endfor %}
-
-
-
-
-
-
-
-
 
 
 
@@ -119,6 +124,12 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
+    var select = document.getElementById("change-resolution");
+    var resolution = ''
+    document.getElementById("changeResolutionButton").addEventListener("click", function(event) {
+        resolution = select.options[select.selectedIndex].value;
+    });
+
     {% for functionality in functionalities %}
         {% if functionality == 'show_dashboard' %}
             $(document).on("submit","#{{functionality}}",function(e){
@@ -140,7 +151,28 @@
                             console.log('what sent')
                         }
                     });
-                });
+            });
+        {% elif functionality == 'change_resolution' %}
+            $(document).on("submit","#{{functionality}}",function(e){
+                e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/nano/{{ hostname }}',
+                        data: {'what': 'change_resolution' },
+                        success: function (data) {
+                            console.log('what sent')
+                        }
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/nano/{{ hostname }}/{{functionality}}',
+                        data: {'what': 'change_resolution',
+                               'resolution': resolution},
+                        success: function (data) {
+                            console.log(resolution)
+                        }
+                    });
+            });
 
         {% else %}
             $(document).on("submit","#{{functionality}}",function(e){
@@ -170,12 +202,14 @@
                     type: 'GET',
                     url: '{{ hostname }}',
                     success: function (data) {
-                        console.log('gor')
                     }
                 });
     }
     refresh()
     setInterval(refresh,20000);//
+
+
+
 </script>
 
 

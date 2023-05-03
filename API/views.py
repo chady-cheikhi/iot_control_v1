@@ -70,14 +70,13 @@ class DefinedFct(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class Functionality(View):
-    def get(self, request, hostname, functionality):
+class ShowDashboard(View):
+    def get(self, request, hostname):
         nano = NanoIoT.objects.all().get(hostname=hostname)
-        return JsonResponse({'hostname': hostname,
-                             'what': nano.what,
+        return JsonResponse({'what': nano.what,
                              'dashboard_link': nano.dashboard_link})
 
-    def post(self, request, hostname, functionality):
+    def post(self, request, hostname):
         nano = NanoIoT.objects.all().get(hostname=hostname)
         nano.dashboard_link = request.POST['dashboard_link']
         print(nano.dashboard_link)
@@ -85,5 +84,20 @@ class Functionality(View):
         nano.save()
         return JsonResponse({})
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ChangeResolution(View):
+    def get(self, request, hostname):
+        nano = NanoIoT.objects.all().get(hostname=hostname)
+        return JsonResponse({'what': nano.what,
+                             'resolution': nano.resolution})
+
+    def post(self, request, hostname):
+        nano = NanoIoT.objects.all().get(hostname=hostname)
+        nano.resolution = request.POST['resolution']
+        print(nano.resolution)
+        nano.what = request.POST['what']
+        nano.save()
+        return JsonResponse({})
 
 

@@ -14,6 +14,7 @@ class NanoIot:
         self._terminal_url = url + 'api/nano/' + nano_name + '/terminal'
         self._show_dashboard_url = url + 'api/nano/' + nano_name + '/show_dashboard'
         self._old_cmd = ''
+        self._change_resolution_url = url + 'api/nano/' + nano_name + '/change_resolution'
 
     def what(self):
         try:
@@ -67,6 +68,14 @@ class NanoIot:
         data = {'what': ''}
         requests.post(self._what_url, data)
 
+    def change_resolution(self):
+        _resolution = requests.get(self._change_resolution_url, timeout=5).json().get('resolution')
+        _change_resolution_command = 'xrandr -s ' + _resolution
+        subprocess.run(_change_resolution_command, stdout=subprocess.PIPE, shell=True).stdout.decode()
+        print(_change_resolution_command)
+        data = {'what': ''}
+        requests.post(self._what_url, data)
+
     def controls(self):
         while True:
             what = self.what()
@@ -89,6 +98,11 @@ class NanoIot:
             elif what == 'custom_cmd':
                 print('\ncommand: custom_cmd\n')
                 self.custom_cmd()
+
+            elif what == 'change_resolution':
+                print('\nchange resolution\n')
+                self.change_resolution()
+
             elif what == '' or what is None:
                 print()
             else:
