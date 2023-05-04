@@ -91,6 +91,10 @@
                 <div class="input-group col-4">
                     <input id="dashboard-link" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">
                 </div>
+            {% elif functionality == "upgrade" %}
+                <div class="input-group col-8">
+                    <textarea rows= 10 id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
+                </div>
             {% elif functionality == "change_resolution" %}
 
                 <div class="input-group mt-1 w-25">
@@ -152,6 +156,30 @@
                         }
                     });
             });
+
+          {% elif functionality == 'upgrade' %}
+            $(document).on("submit","#{{functionality}}",function(e){
+                e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/nano/{{ hostname }}',
+                        data: {'what': 'upgrade' },
+                        success: function (data) {
+                            console.log('what sent')
+                        }
+                    });
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/nano/{{ hostname }}/{{functionality}}',
+                        data: {'what': 'upgrade',
+                               'code': $('#upgrade-code').val()},
+                        success: function (data) {
+                            console.log(data['code'])
+                        }
+                    });
+            });
+
+
         {% elif functionality == 'change_resolution' %}
             $(document).on("submit","#{{functionality}}",function(e){
                 e.preventDefault();

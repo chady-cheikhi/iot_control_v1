@@ -36,7 +36,7 @@ class NanoIoT(models.Model):
     image = models.ImageField(upload_to='', null=True)
     dashboard_link = models.CharField(max_length=255, default='http://10.106.134.210:8080/d/lpU4hW3Mz/dashboard-montage2?orgId=1&refresh=1m&kiosk')
     resolution = models.CharField(max_length=20, choices=resolutions, default='1920x1080')
-
+    code = models.TextField(max_length=100, null=True, blank=True)
     def __str__(self):
         return self.hostname
 

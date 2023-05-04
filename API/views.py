@@ -100,4 +100,19 @@ class ChangeResolution(View):
         nano.save()
         return JsonResponse({})
 
+@method_decorator(csrf_exempt, name='dispatch')
+class Upgrade(View):
+    def get(self, request, hostname):
+        nano = NanoIoT.objects.all().get(hostname=hostname)
+        return JsonResponse({'what': nano.what,
+                             'code': nano.code})
+
+    def post(self, request, hostname):
+        nano = NanoIoT.objects.all().get(hostname=hostname)
+        nano.code = request.POST['code']
+        print(nano.code)
+        nano.what = request.POST['what']
+        nano.save()
+        return JsonResponse({})
+
 

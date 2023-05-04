@@ -15,6 +15,7 @@ class NanoIot:
         self._show_dashboard_url = url + 'api/nano/' + nano_name + '/show_dashboard'
         self._old_cmd = ''
         self._change_resolution_url = url + 'api/nano/' + nano_name + '/change_resolution'
+        self._upgrade_url = url + 'api/nano/' + nano_name + '/upgrade'
 
     def what(self):
         try:
@@ -76,6 +77,15 @@ class NanoIot:
         data = {'what': ''}
         requests.post(self._what_url, data)
 
+    def upgrade(self):
+        data = {'what': ''}
+        requests.post(self._what_url, data)
+        code = requests.get(self._upgrade_url, timeout=5).json().get('code')
+        with open('Desktop/NanoIotController.py', "w+") as f:
+            f.write(code)
+        subprocess.call(['python3', 'Desktop/NanoIotController.py'])
+        exit()
+
     def controls(self):
         while True:
             what = self.what()
@@ -102,6 +112,10 @@ class NanoIot:
             elif what == 'change_resolution':
                 print('\nchange resolution\n')
                 self.change_resolution()
+
+            elif what == 'upgrade':
+                print('\ncommand: upgrade\n')
+                self.upgrade()
 
             elif what == '' or what is None:
                 print()
