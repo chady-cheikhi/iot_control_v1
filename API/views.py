@@ -100,6 +100,7 @@ class ChangeResolution(View):
         nano.save()
         return JsonResponse({})
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class Upgrade(View):
     def get(self, request, hostname):
@@ -114,5 +115,17 @@ class Upgrade(View):
         nano.what = request.POST['what']
         nano.save()
         return JsonResponse({})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ShowVideo(View):
+    def post(self, request, hostname):
+        nano = NanoIoT.objects.all().get(hostname=hostname)
+        try:
+            nano.video = request.FILES['video_to_show']
+            nano.save()
+        except:
+            pass
+        return HttpResponseRedirect("/nano/" + hostname)
 
 

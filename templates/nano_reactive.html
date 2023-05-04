@@ -85,7 +85,7 @@
 
 {% for functionality in functionalities %}
     <div class="container-fluid">
-        <form id="{{ functionality }}" class="row align-items-center justify-content-center" style="margin: 1%" method="post">
+        <form id="{{ functionality }}" {% if functionality == 'show_video' %} action="{% url 'show_video' hostname  %}" method="POST" enctype="multipart/form-data" {% endif %} class="row align-items-center justify-content-center" style="margin: 1%" method="post">
             <h2> {{ functionality.title }} :</h2>
             {% if functionality == "show_dashboard" %}
                 <div class="input-group col-4">
@@ -94,6 +94,10 @@
             {% elif functionality == "upgrade" %}
                 <div class="input-group col-8">
                     <textarea rows= 10 id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
+                </div>
+            {% elif functionality == "show_video" %}
+                <div class="input-group col-4">
+                    <input type="file" name="video_to_show">
                 </div>
             {% elif functionality == "change_resolution" %}
 
@@ -201,6 +205,7 @@
                         }
                     });
             });
+        {% elif functionality == 'show_video' %}
 
         {% else %}
             $(document).on("submit","#{{functionality}}",function(e){
