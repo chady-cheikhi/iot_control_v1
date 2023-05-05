@@ -15,12 +15,12 @@
     function getScreenshot(){
             $.ajax({
                 type: 'GET',
-                url: '/screenshot/{{image.name}}',
+                url: '/media/{{image.name}}',
                 success: function(response) {
-                    $('#screenshot-image').attr('src', '/screenshot/{{ image }}?' + new Date().getTime());
+                    $('#screenshot-image').attr('src', '/media/{{ image }}?' + new Date().getTime());
                 },
                 error: function(response){
-                    alert('error');
+                    location.reload();
                 }
             })
         }

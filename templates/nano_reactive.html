@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ hostname }}</title>
+    <title>Nano IoT: {{ hostname|title }}</title>
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -96,8 +96,14 @@
                     <textarea rows= 10 id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
                 </div>
             {% elif functionality == "show_video" %}
-                <div class="input-group col-4">
-                    <input type="file" name="video_to_show">
+                <div class="input-group col-6">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text" id="inputGroupFileAddon01">Video</span>
+                      </div>
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="video_to_show" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                      </div>
                 </div>
             {% elif functionality == "change_resolution" %}
 

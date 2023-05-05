@@ -122,8 +122,9 @@ class ShowVideo(View):
     def post(self, request, hostname):
         nano = NanoIoT.objects.all().get(hostname=hostname)
         try:
-            nano.video = request.FILES['video_to_show']
-            nano.save()
+            nano.video.delete(save=True)
+            video_to_show = request.FILES['video_to_show']
+            nano.video.save('video_'+hostname+'.mp4', video_to_show)
         except:
             pass
         return HttpResponseRedirect("/nano/" + hostname)
