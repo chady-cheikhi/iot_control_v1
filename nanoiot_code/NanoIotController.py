@@ -68,6 +68,12 @@ class NanoIot:
     def show_video(self):
         data = {'what': ''}
         requests.post(self._what_url, data)
+        command = f'firefox --kiosk {self._url}media/videos/video_{self._nano_name}.mp4'
+        terminal_cmd = ["gnome-terminal", "--", "bash", "-c", command]
+        subprocess.run(terminal_cmd)
+        time.sleep(5)
+        os.system(
+            "xdotool mousemove $(xdotool getdisplaygeometry | awk '{print $1/2, $2/2}'); sleep 0.1; xdotool click 1; sleep 0.1; xdotool click 1")
 
     def change_resolution(self):
         _resolution = requests.get(self._change_resolution_url, timeout=5).json().get('resolution')
@@ -83,7 +89,7 @@ class NanoIot:
         code = requests.get(self._upgrade_url, timeout=5).json().get('code')
         with open('Desktop/NanoIotController.py', "w+") as f:
             f.write(code)
-        subprocess.call(['python3', 'Desktop/NanoIotController.py'])
+        subprocess.call(['python3', 'Desktop/nanoiot_control.py'])
         exit()
 
     def controls(self):
@@ -123,24 +129,6 @@ class NanoIot:
                 print('\n----unkown action----\n')
 
             time.sleep(2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

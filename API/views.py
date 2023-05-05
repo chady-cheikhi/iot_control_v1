@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse, Http404, HttpResponseRedirec
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from .models import NanoIoT
+import requests
 
 # Create your views here.
 
@@ -129,4 +130,10 @@ class ShowVideo(View):
             pass
         return HttpResponseRedirect("/nano/" + hostname)
 
+    def get(self, request, hostname):
+        nano = NanoIoT.objects.all().get(hostname=hostname)
+        return JsonResponse({
+            'what': 'show_video',
+            'video_link':  request.POST.get('video_link')
+        })
 

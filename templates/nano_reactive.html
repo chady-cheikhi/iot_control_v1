@@ -106,7 +106,6 @@
                       </div>
                 </div>
             {% elif functionality == "change_resolution" %}
-
                 <div class="input-group mt-1 w-25">
                   <div class="input-group-prepend">
                     <label class="input-group-text" for="inputGroupSelect01">Resolution</label>
@@ -119,10 +118,14 @@
                 </div>
 
             {% endif %}
-            <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-primary ml-3">{{ functionality|title }}</button>
+            <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-primary ml-3">{% if functionality == 'show_video' %} Upload Video {% else %}{{ functionality|title }}{% endif %}</button>
         </form >
     </div>
-
+    {% if functionality == 'show_video' %}
+    <form id="send_show_video">
+        <button type="submit" class="btn btn-success ml-3">Show Video in NanoIoT : {{ hostname }}</button>
+    </form>
+    {% endif %}
 {% endfor %}
 
 
@@ -245,7 +248,18 @@
                 });
     }
     refresh()
-    setInterval(refresh,20000);//
+    setInterval(refresh,20000);
+    $(document).on("submit","#send_show_video",function(e){
+                e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/nano/{{ hostname }}',
+                        data: {'what': 'show_video' },
+                        success: function (data) {
+                            console.log('what sent')
+                        }
+                    });
+            });
 
 
 
