@@ -15,6 +15,7 @@ class Index(View):
         where_dict = {}
         for place in NanoIoT.where_list:
             where_dict[place] = list(NanoIoT.objects.filter(where=place).values_list('hostname', flat=True))
+        print(where_dict)
         return render(request, 'index.html', {'where_dict': where_dict})
 
 
