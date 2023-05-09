@@ -59,5 +59,9 @@ class Screenshot(View):
         return render(request, 'screenshot.html', {'hostname': hostname,
                                                    'image': image})
 
+class Landing(View):
+    def get(self, request):
+        return render(request, 'landing.html')
+
 
 
