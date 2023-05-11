@@ -1,276 +1,369 @@
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Nano IoT: {{ hostname|title }}</title>
-</head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<style>
+  </head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous"
+  />
+
+  <style>
     form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
     button {
-        margin-top: 1rem;
+      margin-top: 1rem;
     }
     .btn-custom {
-        width: 70%;
+      width: 70%;
     }
-    .bg-primary{
-        font-size: larger;
-        background-color: #0E3385!important;
+    .bg-primary {
+      font-size: larger;
+      background-color: #0e3385 !important;
     }
-    .row{
-        margin: auto;
+    .row {
+      margin: auto;
     }
-</style>
-<body>
+  </style>
+
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0;
+      font-family: "Roboto", sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .bg-image {
+      /* The image used */
+      background-image: url("{% static 'bg.jpeg' %}");
+
+      /* Add the blur effect */
+      filter: blur(8px);
+      -webkit-filter: blur(8px);
+
+      /* Full height */
+      height: 100%;
+
+      /* Center and scale the image nicely */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    /* Position text in the middle of the page/image */
+    .bg-box {
+      background-color: rgb(0, 0, 0); /* Fallback color */
+      background-color: rgba(0, 0, 0, 0.4); /* Black w/opacity/see-through */
+      color: white;
+      font-weight: bold;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      width: 80%;
+      text-align: center;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .redirect_btn {
+      height: 10%;
+      position: relative;
+      top: 15rem;
+      font-size: 20px;
+    }
+    
+  </style>
+
+  <body>
 
 
 
 
-<!--navbar-->
-{% load static %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'logo_carre.png' %}" width="70" height="70" alt="Photo_logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">All NanoIoTs</a>
-                </li>
-                {% for where in where_dict.items %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ where.0.title }}
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {% for nano in where.1 %}
-                            <a class="dropdown-item" href="/nano/{{ nano }}">{{ nano.title }}</a>
-                            {% endfor %}
+
+
+
+
+
+
+
+
+
+
+    <div class="bg-image"></div>
+    <div class="bg-box">
+      <div id="accordion">
+        <div class="row justify-content-center" align="center">
+          {% for functionality in functionalities %}
+          <div class="col-6 mt-4 mb-4">
+            <h5 class="mb-0 justify-content-center">
+              <button
+                class="btn btn-outline-light"
+                style="width: 60%; height: 6vh; font-size: large; font-weight: 500;"
+                data-toggle="collapse"
+                data-target="#{{functionality}}"
+                aria-expanded="true"
+                aria-controls="{{functionality}}"
+              >
+
+                {% if functionality == 'custom_cmd' %}
+                    Terminal Controller
+                {%elif functionality == 'change_resolution' %}
+                    Resolution Changer
+                {%elif functionality == 'show_video' %}
+                    Show video in NanoIoT
+                {%elif functionality == 'show_dashboard' %}
+                    Display Link in NanoIoT
+                {%else%}
+                {{functionality|title}}
+                {% endif%}
+
+              </button>
+            </h5>
+            <div
+              id="{{functionality}}"
+              class="collapse"
+              aria-labelledby="headingOne"
+              data-parent="#accordion"
+            >
+              <div class="card-body">
+                <form id="{{ functionality }}" {% if functionality == 'show_video' %} action="{% url 'show_video' hostname  %}" method="POST" enctype="multipart/form-data" {% endif %} class="row align-items-center justify-content-center" method="post">
+                    
+                    {% if functionality == "show_dashboard" %}
+                        <div class="input-group col-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupFileAddon01">Link</span>
+                            </div>
+                            <input id="dashboard-link" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">
                         </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </nav>
+                    <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-outline-light">{% if functionality == 'show_video' %} Upload Video {% else %} Show Dashboard {% endif %}</button>
 
-<!-- end navbar-->
+    
+                    {% elif functionality == "upgrade" %}
+                        <div class="input-group">
+                            <textarea col= "10" rows= "5" id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
+                        </div>
+                    <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-outline-light">{% if functionality == 'show_video' %} Upload Video {% else %}Confirm code Upgrade{% endif %}</button>
 
+    
+                    {% elif functionality == "show_video" %}
+    
+                        <div class="input-group col-10">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text" id="inputGroupFileAddon01">Video</span>
+                              </div>
+                              <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="video_to_show">
+                                <label class="custom-file-label">Choose file</label>
+                              </div>
+                        </div>
+                    <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-outline-light">{% if functionality == 'show_video' %} Upload Video {% else %}{{ functionality|title }}{% endif %}</button>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="row">
-    {% for functionality in functionalities %}
-            <div class="col-6 mt-4" >
-        <div class="container-fluid">
-            <form id="{{ functionality }}" {% if functionality == 'show_video' %} action="{% url 'show_video' hostname  %}" method="POST" enctype="multipart/form-data" {% endif %} class="row align-items-center justify-content-center" style="" method="post">
-                <h2> {{ functionality.title }} :</h2>
-                {% if functionality == "show_dashboard" %}
-                    <div class="input-group col-10">
-                        <input id="dashboard-link" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">
-                    </div>
-
-                {% elif functionality == "upgrade" %}
-                    <div class="input-group col-10">
-                        <textarea rows= 10 id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
-                    </div>
-
-                {% elif functionality == "show_video" %}
-                    <div class="input-group col-10">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text" id="inputGroupFileAddon01">Video</span>
-                          </div>
-                          <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="video_to_show" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                          </div>
-                    </div>
-
-                {% elif functionality == "change_resolution" %}
-                    <div class="input-group col-10">
-                      <div class="input-group-prepend">
-                        <label class="input-group-text" for="inputGroupSelect01">Resolution</label>
+    
+                    {% elif functionality == "change_resolution" %}
+                    <div class="input-group mt-1 col-10">
+                        <div class="input-group-prepend">
+                          <label class="input-group-text" for="inputGroupSelect01">Resolution</label>
+                        </div>
+                        <select class="custom-select" id="change-resolution">
+                          {% for resolution in resolutions %}
+                            <option value="{{ resolution }}"> {{ resolution }} </option>
+                          {% endfor %}
+                        </select>
                       </div>
-                      <select class="custom-select" id="change-resolution">
-                        {% for resolution in resolutions %}
-                          <option value="{{ resolution }}"> {{ resolution }} </option>
-                        {% endfor %}
-                      </select>
-                    </div>
+                    <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-outline-light">{% if functionality == 'show_video' %} Upload Video {% else %} Change the resolution {% endif %}</button>
 
-                {% endif %}
-                <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-primary">{% if functionality == 'show_video' %} Upload Video {% else %}{{ functionality|title }}{% endif %}</button>
-            </form >
-            {% if functionality == 'show_video' %}
-            <form id="send_show_video">
-                <button type="submit" class="btn btn-success ">Show Video in NanoIoT : {{ hostname }}</button>
-            </form>
-            {% endif %}
-        </div>
-        </div>
-    {% endfor %}
-</div>
+                    {% elif functionality == "custom_cmd" %}
+                    <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-outline-light">{% if functionality == 'show_video' %} Upload Video {% else %}Use {{hostname}} terminal{% endif %}</button>
+                      
+                    {% elif functionality == "reboot" %}
+                    <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-outline-light">{% if functionality == 'show_video' %} Upload Video {% else %}Confirm Reboot {% endif %}</button>
 
+                    {% elif functionality == "screenshot" %}
+                    <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-outline-light">{% if functionality == 'show_video' %} Upload Video {% else %}Take screenshot of "{{ hostname }}"{% endif %}</button>
+ 
 
-
-
-
-
-
-
-
-{% include 'footer.html' %}
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script>
-    var select = document.getElementById("change-resolution");
-    var resolution = ''
-    document.getElementById("changeResolutionButton").addEventListener("click", function(event) {
-        resolution = select.options[select.selectedIndex].value;
-    });
-
-    {% for functionality in functionalities %}
-        {% if functionality == 'show_dashboard' %}
-            $(document).on("submit","#{{functionality}}",function(e){
-                e.preventDefault();
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/nano/{{ hostname }}',
-                        data: {'what': 'show_dashboard' },
-                        success: function (data) {
-                            console.log('what sent')
-                        }
-                    });
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/nano/{{ hostname }}/{{functionality}}',
-                        data: {'what': 'show_dashboard',
-                               'dashboard_link': $('#dashboard-link').val()},
-                        success: function (data) {
-                            console.log('what sent')
-                        }
-                    });
-            });
-
-          {% elif functionality == 'upgrade' %}
-            $(document).on("submit","#{{functionality}}",function(e){
-                e.preventDefault();
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/nano/{{ hostname }}',
-                        data: {'what': 'upgrade' },
-                        success: function (data) {
-                            console.log('what sent')
-                        }
-                    });
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/nano/{{ hostname }}/{{functionality}}',
-                        data: {'what': 'upgrade',
-                               'code': $('#upgrade-code').val()},
-                        success: function (data) {
-                            console.log(data['code'])
-                        }
-                    });
-            });
-
-
-        {% elif functionality == 'change_resolution' %}
-            $(document).on("submit","#{{functionality}}",function(e){
-                e.preventDefault();
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/nano/{{ hostname }}',
-                        data: {'what': 'change_resolution' },
-                        success: function (data) {
-                            console.log('what sent')
-                        }
-                    });
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/nano/{{ hostname }}/{{functionality}}',
-                        data: {'what': 'change_resolution',
-                               'resolution': resolution},
-                        success: function (data) {
-                            console.log(resolution)
-                        }
-                    });
-            });
-        {% elif functionality == 'show_video' %}
-
-        {% else %}
-            $(document).on("submit","#{{functionality}}",function(e){
-                    e.preventDefault();
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/nano/{{ hostname }}',
-                        data: {'what': '{{functionality}}'},
-                        success: function (data) {
-                            {% if functionality == 'custom_cmd'%}
-                                location.href = "/nano/{{ hostname }}/terminal";
-                            {% endif %}
-                            console.log('what sent')
-                            }
-                        });
-                    {% if functionality == 'screenshot' %}
-                        window.open("../nano/{{hostname}}/screenshot","bfs","fullscreen");
+      
                     {% endif %}
-            });
-        {% endif %}
-    {% endfor %}
+                </form >
 
-    // refreshing because while using terminal and using navigator's back, terminal stays getting
-    // every 20s, get /nano/<hostname> that empties nano.what and nano.custom_cmd
-    function refresh() {
-        $.ajax({
-                    type: 'GET',
-                    url: '{{ hostname }}',
-                    success: function (data) {
-                    }
-                });
-    }
-    refresh()
-    setInterval(refresh,20000);
-    $(document).on("submit","#send_show_video",function(e){
-                e.preventDefault();
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/nano/{{ hostname }}',
-                        data: {'what': 'show_video' },
-                        success: function (data) {
-                            console.log('what sent')
-                        }
-                    });
-            });
+
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
 
 
 
-</script>
 
 
-</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      var select = document.getElementById("change-resolution");
+      var resolution = ''
+      document.getElementById("changeResolutionButton").addEventListener("click", function(event) {
+          resolution = select.options[select.selectedIndex].value;
+      });
+
+      {% for functionality in functionalities %}
+          {% if functionality == 'show_dashboard' %}
+              $(document).on("submit","#{{functionality}}",function(e){
+                  e.preventDefault();
+                      $.ajax({
+                          type: 'POST',
+                          url: '/api/nano/{{ hostname }}',
+                          data: {'what': 'show_dashboard' },
+                          success: function (data) {
+                              console.log('what sent')
+                          }
+                      });
+                      $.ajax({
+                          type: 'POST',
+                          url: '/api/nano/{{ hostname }}/{{functionality}}',
+                          data: {'what': 'show_dashboard',
+                                 'dashboard_link': $('#dashboard-link').val()},
+                          success: function (data) {
+                              console.log('what sent')
+                          }
+                      });
+              });
+
+            {% elif functionality == 'upgrade' %}
+              $(document).on("submit","#{{functionality}}",function(e){
+                  e.preventDefault();
+                      $.ajax({
+                          type: 'POST',
+                          url: '/api/nano/{{ hostname }}',
+                          data: {'what': 'upgrade' },
+                          success: function (data) {
+                              console.log('what sent')
+                          }
+                      });
+                      $.ajax({
+                          type: 'POST',
+                          url: '/api/nano/{{ hostname }}/{{functionality}}',
+                          data: {'what': 'upgrade',
+                                 'code': $('#upgrade-code').val()},
+                          success: function (data) {
+                              console.log(data['code'])
+                          }
+                      });
+              });
+
+
+          {% elif functionality == 'change_resolution' %}
+              $(document).on("submit","#{{functionality}}",function(e){
+                  e.preventDefault();
+                      $.ajax({
+                          type: 'POST',
+                          url: '/api/nano/{{ hostname }}',
+                          data: {'what': 'change_resolution' },
+                          success: function (data) {
+                              console.log('what sent')
+                          }
+                      });
+                      $.ajax({
+                          type: 'POST',
+                          url: '/api/nano/{{ hostname }}/{{functionality}}',
+                          data: {'what': 'change_resolution',
+                                 'resolution': resolution},
+                          success: function (data) {
+                              console.log(resolution)
+                          }
+                      });
+              });
+          {% elif functionality == 'show_video' %}
+
+          {% else %}
+              $(document).on("submit","#{{functionality}}",function(e){
+                      e.preventDefault();
+                      $.ajax({
+                          type: 'POST',
+                          url: '/api/nano/{{ hostname }}',
+                          data: {'what': '{{functionality}}'},
+                          success: function (data) {
+                              {% if functionality == 'custom_cmd'%}
+                                  location.href = "/nano/{{ hostname }}/terminal";
+                              {% endif %}
+                              console.log('what sent')
+                              }
+                          });
+                      {% if functionality == 'screenshot' %}
+                          window.open("../nano/{{hostname}}/screenshot","bfs","fullscreen");
+                      {% endif %}
+              });
+          {% endif %}
+      {% endfor %}
+
+      // refreshing because while using terminal and using navigator's back, terminal stays getting
+      // every 20s, get /nano/<hostname> that empties nano.what and nano.custom_cmd
+      function refresh() {
+          $.ajax({
+                      type: 'GET',
+                      url: '{{ hostname }}',
+                      success: function (data) {
+                      }
+                  });
+      }
+      refresh()
+      setInterval(refresh,20000);
+      $(document).on("submit","#send_show_video",function(e){
+                  e.preventDefault();
+                      $.ajax({
+                          type: 'POST',
+                          url: '/api/nano/{{ hostname }}',
+                          data: {'what': 'show_video' },
+                          success: function (data) {
+                              console.log('what sent')
+                          }
+                      });
+              });
+    </script>
+  </body>
 </html>
