@@ -47,7 +47,7 @@
     {% for functionality in functionalities %}
             <div class="col-6 mt-4" >
         <div class="container-fluid">
-            <form id="{{ functionality }}" {% if functionality == 'show_video' %} action="{% url 'show_video' hostname  %}" method="POST" enctype="multipart/form-data" {% endif %} class="row align-items-center justify-content-center" style="" method="post">
+            <form id="{{ functionality }}" {% if functionality == 'show_video' %} action="{% url 'show_video' hostname  %}" enctype="multipart/form-data" {% endif %} class="row align-items-center justify-content-center" style="" method="post">
                 <h2> {{ functionality.title }} :</h2>
                 {% if functionality == "show_dashboard" %}
                     <div class="input-group col-10">
@@ -87,17 +87,7 @@
 
 
                 {% elif functionality == "change_resolution" %}
-                    <div id="accordion">
-                        <div class="row justify-content-center" align="center">
-                            <div class="mt-4 mb-4">
-                                <h5 class="mb-0 justify-content-center">
-                                    <button class="btn btn-outline-light" data-toggle="collapse" data-target="#resolution" aria-expanded="true" aria-controls="{{ where.0.title }}">
-                                        Change Resolution
-                                    </button>
-                                </h5>
-                                <div id="resolution" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <div class="input-group ">
+                    <div class="input-group ">
 
                                           <div class="input-group-prepend">
                                             <label class="input-group-text" for="inputGroupSelect01">Resolution</label>
@@ -108,14 +98,8 @@
                                             {% endfor %}
                                           </select>
 
-                                            <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-primary w-100">{% if functionality == 'show_video' %} Upload Video {% else %}{{ functionality|title }}{% endif %}</button>
 
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
 
                 {% endif %}

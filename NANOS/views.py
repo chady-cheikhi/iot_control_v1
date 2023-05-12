@@ -30,7 +30,7 @@ class Nano(View):
         nano.what = ''
         nano.custom_cmd = None
         nano.save()
-        return render(request, 'nano_reactive.html', {'functionalities': functionalities,
+        return render(request, 'nano.html', {'functionalities': functionalities,
                                                       'hostname': hostname,
                                                       'where_dict': where_dict,
                                                       'resolutions': resolutions

@@ -204,6 +204,11 @@
       
                     {% endif %}
                 </form >
+                {% if functionality == 'show_video' %}
+                    <form id="send_show_video">
+                        <button type="submit" class="btn btn-success ">Show Video in NanoIoT : {{ hostname }}</button>
+                    </form>
+                {% endif %}
 
 
               </div>

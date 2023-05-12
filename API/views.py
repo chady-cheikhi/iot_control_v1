@@ -131,7 +131,6 @@ class ShowVideo(View):
         return HttpResponseRedirect("/nano/" + hostname)
 
     def get(self, request, hostname):
-        nano = NanoIoT.objects.all().get(hostname=hostname)
         return JsonResponse({
             'what': 'show_video',
             'video_link':  request.POST.get('video_link')
