@@ -77,7 +77,6 @@
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 2;
-      width: 80%;
       text-align: center;
       height: 100vh;
       width: 100vw;
@@ -134,15 +133,10 @@
 
               </button>
             </h5>
-            <div
-              id="{{functionality}}"
-              class="collapse"
-              aria-labelledby="headingOne"
-              data-parent="#accordion"
-            >
+            <div  id="{{functionality}}"  class="collapse"  aria-labelledby="headingOne"  data-parent="#accordion" >
               <div class="card-body">
                 <form id="{{ functionality }}" {% if functionality == 'show_video' %} action="{% url 'show_video' hostname  %}" method="POST" enctype="multipart/form-data" {% endif %} class="row align-items-center justify-content-center" method="post">
-                    
+
                     {% if functionality == "show_dashboard" %}
                         <div class="input-group col-12">
                             <div class="input-group-prepend">
@@ -155,7 +149,7 @@
     
                     {% elif functionality == "upgrade" %}
                         <div class="input-group">
-                            <textarea col= "10" rows= "5" id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
+                            <textarea cols= "10" rows= "5" id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
                         </div>
                     <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-outline-light">{% if functionality == 'show_video' %} Upload Video {% else %}Confirm code Upgrade{% endif %}</button>
 
@@ -256,21 +250,21 @@
           {% if functionality == 'show_dashboard' %}
               $(document).on("submit","#{{functionality}}",function(e){
                   e.preventDefault();
-                      $.ajax({
-                          type: 'POST',
+                      $.post({
+
                           url: '/api/nano/{{ hostname }}',
                           data: {'what': 'show_dashboard' },
                           success: function (data) {
-                              console.log('what sent')
+                              console.log('show_dashboard')
                           }
                       });
-                      $.ajax({
-                          type: 'POST',
+                      $.post({
+
                           url: '/api/nano/{{ hostname }}/{{functionality}}',
                           data: {'what': 'show_dashboard',
                                  'dashboard_link': $('#dashboard-link').val()},
                           success: function (data) {
-                              console.log('what sent')
+                              console.log('show_dashboard data : ' + $('#dashboard-link').val())
                           }
                       });
               });
@@ -278,16 +272,16 @@
             {% elif functionality == 'upgrade' %}
               $(document).on("submit","#{{functionality}}",function(e){
                   e.preventDefault();
-                      $.ajax({
-                          type: 'POST',
+                      $.post({
+
                           url: '/api/nano/{{ hostname }}',
                           data: {'what': 'upgrade' },
                           success: function (data) {
-                              console.log('what sent')
+                              console.log('upgrade')
                           }
                       });
-                      $.ajax({
-                          type: 'POST',
+                      $.post({
+
                           url: '/api/nano/{{ hostname }}/{{functionality}}',
                           data: {'what': 'upgrade',
                                  'code': $('#upgrade-code').val()},
@@ -301,21 +295,19 @@
           {% elif functionality == 'change_resolution' %}
               $(document).on("submit","#{{functionality}}",function(e){
                   e.preventDefault();
-                      $.ajax({
-                          type: 'POST',
+                      $.post({
                           url: '/api/nano/{{ hostname }}',
                           data: {'what': 'change_resolution' },
                           success: function (data) {
-                              console.log('what sent')
+                              console.log('change_resolution')
                           }
                       });
-                      $.ajax({
-                          type: 'POST',
+                      $.post({
                           url: '/api/nano/{{ hostname }}/{{functionality}}',
                           data: {'what': 'change_resolution',
                                  'resolution': resolution},
                           success: function (data) {
-                              console.log(resolution)
+                              console.log('change_resolution, new res: '+ resolution)
                           }
                       });
               });
@@ -324,15 +316,15 @@
           {% else %}
               $(document).on("submit","#{{functionality}}",function(e){
                       e.preventDefault();
-                      $.ajax({
-                          type: 'POST',
+                      $.post({
+
                           url: '/api/nano/{{ hostname }}',
                           data: {'what': '{{functionality}}'},
                           success: function (data) {
                               {% if functionality == 'custom_cmd'%}
                                   location.href = "/nano/{{ hostname }}/terminal";
                               {% endif %}
-                              console.log('what sent')
+                              console.log('else what sent')
                               }
                           });
                       {% if functionality == 'screenshot' %}
@@ -356,12 +348,12 @@
       setInterval(refresh,20000);
       $(document).on("submit","#send_show_video",function(e){
                   e.preventDefault();
-                      $.ajax({
-                          type: 'POST',
+                      $.post({
+
                           url: '/api/nano/{{ hostname }}',
                           data: {'what': 'show_video' },
                           success: function (data) {
-                              console.log('what sent')
+                              console.log('send show video')
                           }
                       });
               });

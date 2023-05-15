@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ hostname }}Screenshot</title>
+    <title>{{ hostname }} : Screenshot</title>
 </head>
 <body>
 
-<img id="screenshot-image" src="" width="700" height="400" alt="Screenshot">
+<img id="screenshot-image" src="" width="100%" height="100%" alt="Screenshot">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
@@ -25,7 +25,7 @@
             })
         }
     getScreenshot()
-    setInterval(getScreenshot,10000);
+    setInterval(getScreenshot,3000);
 </script>
 </body>
 </html>

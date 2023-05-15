@@ -142,7 +142,7 @@
                         url: '/api/nano/{{ hostname }}',
                         data: {'what': 'show_dashboard' },
                         success: function (data) {
-                            console.log('what sent')
+                            console.log('show_dashboard')
                         }
                     });
                     $.ajax({
@@ -151,7 +151,7 @@
                         data: {'what': 'show_dashboard',
                                'dashboard_link': $('#dashboard-link').val()},
                         success: function (data) {
-                            console.log('what sent')
+                            console.log('show_dashboard data : '+$('#dashboard-link').val())
                         }
                     });
             });
@@ -164,7 +164,7 @@
                         url: '/api/nano/{{ hostname }}',
                         data: {'what': 'upgrade' },
                         success: function (data) {
-                            console.log('what sent')
+                            console.log('upgrade')
                         }
                     });
                     $.ajax({
@@ -187,7 +187,7 @@
                         url: '/api/nano/{{ hostname }}',
                         data: {'what': 'change_resolution' },
                         success: function (data) {
-                            console.log('what sent')
+                            console.log('change_resolution')
                         }
                     });
                     $.ajax({
@@ -213,7 +213,7 @@
                             {% if functionality == 'custom_cmd'%}
                                 location.href = "/nano/{{ hostname }}/terminal";
                             {% endif %}
-                            console.log('what sent')
+                            console.log('show_video')
                             }
                         });
                     {% if functionality == 'screenshot' %}
@@ -242,7 +242,7 @@
                         url: '/api/nano/{{ hostname }}',
                         data: {'what': 'show_video' },
                         success: function (data) {
-                            console.log('what sent')
+                            console.log('show_video')
                         }
                     });
             });
