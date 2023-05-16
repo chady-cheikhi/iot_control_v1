@@ -45,11 +45,10 @@ class NanoTerminalData(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class DefinedFct(View):
+class Screenshot(View):
 
     def get(self, request, hostname):
         nano = NanoIoT.objects.all().get(hostname=hostname)
-
         return JsonResponse({'what': nano.what})
 
     def post(self, request, hostname):
@@ -90,13 +89,15 @@ class ShowDashboard(View):
 class ChangeResolution(View):
     def get(self, request, hostname):
         nano = NanoIoT.objects.all().get(hostname=hostname)
+        print("-------------------------------from get", nano.resolution)
         return JsonResponse({'what': nano.what,
                              'resolution': nano.resolution})
 
     def post(self, request, hostname):
         nano = NanoIoT.objects.all().get(hostname=hostname)
         nano.resolution = request.POST['resolution']
-        print(nano.resolution)
+        nano.save()
+        print("-------------------------------from post", nano.resolution)
         nano.what = request.POST['what']
         nano.save()
         return JsonResponse({})

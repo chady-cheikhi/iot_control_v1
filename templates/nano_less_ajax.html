@@ -41,76 +41,78 @@
 
 
 
-<div id="accordion">
-    <div class="bg-box">
-        <div class="row justify-content-center">
-            {% for functionality in functionalities %}
-                <button class="btn btn-primary col-6" data-toggle="collapse" data-target="#co{{functionality}}" aria-expanded="true" aria-controls="co{{functionality}}">
-                    {% if functionality == 'custom_cmd' %}
-                        Terminal Controller
-                    {%elif functionality == 'change_resolution' %}
-                        Resolution Changer
-                    {%elif functionality == 'show_video' %}
-                        Show video in NanoIoT
-                    {%elif functionality == 'show_dashboard' %}
-                        Display Link in NanoIoT
-                    {%else%}
-                    {{functionality|title}}
-                    {% endif%}
-                </button>
 
-                <div  id="co{{functionality}}"  class="collapse"  aria-labelledby="heading{{ functionality }}"  data-parent="#accordion" >
-                        <div class="container-fluid col-6">
-                            <form id="{{ functionality }}" {% if functionality == 'show_video' %} action="{% url 'show_video' hostname  %}" enctype="multipart/form-data" {% endif %} class="row align-items-center justify-content-center" style="" method="post">
-                                <h2> {{ functionality.title }} :</h2>
-
-                                {% if functionality == "show_dashboard" %}
-                                    <div class="input-group col-10">
-                                        <input id="dashboard-link" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">
-                                    </div>
-
-                                {% elif functionality == "upgrade" %}
-                                    <div class="input-group col-10">
-                                        <textarea rows= 10 id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
-                                    </div>
-
-                                {% elif functionality == "show_video" %}
-                                    <div class="input-group col-10">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupFileAddon01">Video</span>
-                                        </div>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="video_to_show" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                        </div>
-                                    </div>
-
-                                {% elif functionality == "change_resolution" %}
-                                    <div class="input-group ">
-                                        <div class="input-group-prepend">
-                                            <label class="input-group-text" for="inputGroupSelect01">Resolution</label>
-                                        </div>
-                                        <select class="custom-select" id="change-resolution">
-                                            {% for resolution in resolutions %}
-                                                <option value="{{ resolution }}"> {{ resolution }} </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-
-                                {% endif %}
-                                <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-primary">{% if functionality == 'show_video' %} Upload Video {% else %}{{ functionality|title }}{% endif %}</button>
-                            </form >
-                            {% if functionality == 'show_video' %}
-                                <form id="send_show_video">
-                                    <button type="submit" class="btn btn-success ">Show Video in NanoIoT : {{ hostname }}</button>
-                                </form>
-                            {% endif %}
-                        </div>
-
-                </div>
-            {% endfor %}
+<div class="row">
+    <p>
+        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Link with href
+        </a>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Button with data-bs-target
+        </button>
+    </p>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
         </div>
     </div>
+    {% for functionality in functionalities %}
+
+
+
+        <div class="col-6 mt-4" >
+            <div class="container-fluid">
+                <form id="{{ functionality }}" {% if functionality == 'show_video' %} action="{% url 'show_video' hostname  %}" enctype="multipart/form-data" {% endif %} class="row align-items-center justify-content-center" style="" method="post">
+                    <h2> {{ functionality.title }} :</h2>>
+
+                    {% if functionality == "show_dashboard" %}
+                        <div class="input-group col-10">
+                            <input id="dashboard-link" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">
+                        </div>
+
+                    {% elif functionality == "upgrade" %}
+                        <div class="input-group col-10">
+                            <textarea rows= 10 id="upgrade-code" type="text" class="form-control" aria-describedby="inputGroup-sizing-default">#code here</textarea>
+                        </div>
+
+                    {% elif functionality == "show_video" %}
+                        <div class="input-group col-10">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupFileAddon01">Video</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="video_to_show" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                            </div>
+                        </div>
+
+                    {% elif functionality == "change_resolution" %}
+                        <div class="input-group ">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Resolution</label>
+                            </div>
+                            <select class="custom-select" id="change-resolution">
+                                {% for resolution in resolutions %}
+                                    <option value="{{ resolution }}"> {{ resolution }} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    {% endif %}
+                    <button {% if functionality == 'change_resolution' %} id="changeResolutionButton" {% endif %}type="submit" class="btn btn-custom btn-primary">{% if functionality == 'show_video' %} Upload Video {% else %}{{ functionality|title }}{% endif %}</button>
+                </form >
+
+                {% if functionality == 'show_video' %}
+                    <form id="send_show_video">
+                        <button type="submit" class="btn btn-success ">Show Video in NanoIoT : {{ hostname }}</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+
+
+    {% endfor %}
 </div>
 
 
