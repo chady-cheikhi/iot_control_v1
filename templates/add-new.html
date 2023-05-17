@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body, html {
+          height: 100%;
+          margin: 0;
+          font-family: 'Roboto', sans-serif;
+        }
+        * {
+          box-sizing: border-box;
+        }
+
+        .bg-image {
+          /* The image used */
+          background-image: url("{% static 'bg.jpeg' %}");
+
+          /* Add the blur effect */
+          filter: blur(8px);
+          -webkit-filter: blur(8px);
+
+          /* Full height */
+          height: 100%;
+
+          /* Center and scale the image nicely */
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+
+        /* Position text in the middle of the page/image */
+        .bg-text {
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
+          color: white;
+          font-weight: bold;
+          border: 3px solid #f1f1f1;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 2;
+          width: 80%;
+          padding: 20px;
+          text-align: center;
+        }
+
+        .redirect_btn{
+            height: 10%;
+            position: relative;
+            top: 12rem;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-image"></div>
+    <div class="bg-text">
+        <h1 style="font-size: 60px">Add New NanoIoT</h1>
+            <form method="post" action="{% url 'add' %}" class="row">
+                <div class="col-4 h-100">{{ form.hostname }}</div>
+                <div class="col-4">{{ form.where }}</div>
+                <button class="col-4 btn btn-secondary" type="submit">Add New NanoIoT</button>
+            </form>
+            <a type="button" class="btn btn-secondary row mt-5" href="all-nanos">Control The Nano</a>
+    </div>
+
+</body>
+</html>

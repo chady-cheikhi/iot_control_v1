@@ -1,8 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render
-from django.http import Http404, JsonResponse
-from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+
+from .forms import AddNewNanoForm
+from django.views import View
+
 
 from API.models import NanoIoT
 
@@ -64,6 +67,22 @@ class Screenshot(View):
 class Landing(View):
     def get(self, request):
         return render(request, 'landing.html')
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AddNewNano(View):
+    def get(self, request):
+        new_nano_form = AddNewNanoForm()
+        return render(request, 'add-new.html', {'form': new_nano_form})
+
+    def post(self, request):
+        hostname = request.POST['hostname']
+        where = request.POST['where']
+        new_nano = NanoIoT(hostname=hostname, where= where)
+        new_nano.save()
+        new_nano_form = AddNewNanoForm()
+        return render(request, 'add-new.html', {'form': new_nano_form})
+
 
 
 
