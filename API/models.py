@@ -33,11 +33,11 @@ class NanoIoT(models.Model):
     defined_cmds = models.CharField(max_length=20, choices=cmds, blank=True, null=True)
     what = models.TextField(max_length=100, default='cusm_cmd')
     where = models.CharField("NanoIoT's Location", max_length=20, choices=where, default='unknown')
-    image = models.ImageField(upload_to='', null=True)
+    image = models.ImageField(upload_to='', blank=True, null=True)
     dashboard_link = models.CharField(max_length=255, default='http://10.106.134.210:8080/d/lpU4hW3Mz/dashboard-montage2?orgId=1&refresh=1m&kiosk')
     resolution = models.CharField(max_length=20, choices=resolutions, default='1920x1080')
     code = models.TextField(max_length=100, null=True, blank=True)
-    video = models.FileField(upload_to='videos/', null=True)
+    video = models.FileField(upload_to='videos/', blank=True, null=True)
 
     def __str__(self):
         return self.hostname

@@ -20,7 +20,7 @@
 
         .bg-image {
           /* The image used */
-          background-image: url("{% static 'bg.jpeg' %}");
+          background-image: url("{% static 'bg.png' %}");
 
           /* Add the blur effect */
           filter: blur(8px);
@@ -65,12 +65,13 @@
     <div class="bg-image"></div>
     <div class="bg-text">
         <h1 style="font-size: 60px">Add New NanoIoT</h1>
-            <form method="post" action="{% url 'add' %}" class="row">
-                <div class="col-4 h-100">{{ form.hostname }}</div>
-                <div class="col-4">{{ form.where }}</div>
+            <form method="post" action="{% url 'add' %}" class="row justify-content-center">
+                {{ form.hostname }}
+                {{ form.where }}
                 <button class="col-4 btn btn-secondary" type="submit">Add New NanoIoT</button>
             </form>
-            <a type="button" class="btn btn-secondary row mt-5" href="all-nanos">Control The Nano</a>
+            <a type="button" class="btn btn-secondary row mt-5 col-4 h-75" href="all-nanos">Control NanoIoT</a>
+            {{ e }}
     </div>
 
 </body>

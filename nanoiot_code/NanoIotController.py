@@ -28,13 +28,14 @@ class NanoIot:
     def custom_cmd(self):
         _cmd = requests.get(self._terminal_url, timeout=5).json().get('custom_cmd')
         if _cmd != self._old_cmd and _cmd is not None:
-            self._old_cmd = _cmd
-            os.system(_cmd)
-            _suc_cmd = subprocess.run(_cmd, stdout=subprocess.PIPE, shell=True).stdout.decode()
-            _err_cmd = subprocess.run(_cmd, stderr=subprocess.PIPE, shell=True).stderr.decode()
-            result = _suc_cmd if _suc_cmd != '' else _err_cmd
-            result = result.replace('\n', '<br>')
-            payload = {'custom_cmd_output': result, 'custom_cmd': _cmd}
+            try:
+                self._old_cmd = _cmd
+                p = subprocess.run(_cmd,timeout=3, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                result = p.stdout.decode() if p.stdout.decode() != '' else p.stderr.decode()
+                result = result.replace('\n', '<br>')
+                payload = {'custom_cmd_output': result, 'custom_cmd': _cmd}
+            except:
+                payload = {'custom_cmd_output': 'Time out ', 'custom_cmd': _cmd}
             requests.post(self._terminal_url, data=payload)
         else:
             print("same command wouldn't be executed")
@@ -79,7 +80,7 @@ class NanoIot:
         _resolution = requests.get(self._change_resolution_url, timeout=5).json().get('resolution')
         _change_resolution_command = 'xrandr -s ' + _resolution
         subprocess.run(_change_resolution_command, stdout=subprocess.PIPE, shell=True).stdout.decode()
-        print(_change_resolution_command)
+        print(_resolution)
         data = {'what': ''}
         requests.post(self._what_url, data)
 
@@ -128,8 +129,7 @@ class NanoIot:
             else:
                 print('\n----unkown action----\n')
 
-            time.sleep(2)
-
+            time.sleep(3)
 
 
 

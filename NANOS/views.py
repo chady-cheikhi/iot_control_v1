@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -34,10 +34,10 @@ class Nano(View):
         nano.custom_cmd = None
         nano.save()
         return render(request, 'nano_page.html', {'functionalities': functionalities,
-                                                      'hostname': hostname,
-                                                      'where_dict': where_dict,
-                                                      'resolutions': resolutions
-                                                      })
+                                                  'hostname': hostname,
+                                                  'where_dict': where_dict,
+                                                  'resolutions': resolutions
+                                                  })
 
 
 class Terminal(View):
@@ -76,13 +76,21 @@ class AddNewNano(View):
         return render(request, 'add-new.html', {'form': new_nano_form})
 
     def post(self, request):
-        hostname = request.POST['hostname']
-        where = request.POST['where']
-        new_nano = NanoIoT(hostname=hostname, where= where)
-        new_nano.save()
         new_nano_form = AddNewNanoForm()
-        return render(request, 'add-new.html', {'form': new_nano_form})
+        try:
+            hostname = request.POST['hostname']
+            where = request.POST['where']
+            new_nano = NanoIoT(hostname=hostname, where=where)
+            new_nano.save()
+            return render(request, 'add-new.html', {'form': new_nano_form})
+        except ValueError as e:
+            return render(request, 'add-new.html', {'form': new_nano_form,
+                                                    'error': e})
 
 
-
-
+class ShowUploadedVideo(View):
+    def get(self, request, hostname):
+        video_url = NanoIoT.objects.get(hostname=hostname).video.url
+        print(video_url)
+        return render(request, "show_uploaded_video.html", {"video_url": video_url,
+                                                            "hostname": hostname})

@@ -87,14 +87,16 @@ class ShowDashboard(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ChangeResolution(View):
+    nano = NanoIoT.objects.all()
+
     def get(self, request, hostname):
-        nano = NanoIoT.objects.all().get(hostname=hostname)
+        nano = self.nano.get(hostname=hostname)
         print("-------------------------------from get", nano.resolution)
         return JsonResponse({'what': nano.what,
                              'resolution': nano.resolution})
 
     def post(self, request, hostname):
-        nano = NanoIoT.objects.all().get(hostname=hostname)
+        nano = self.nano.get(hostname=hostname)
         nano.resolution = request.POST['resolution']
         nano.save()
         print("-------------------------------from post", nano.resolution)
