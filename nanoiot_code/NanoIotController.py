@@ -30,15 +30,22 @@ class NanoIot:
         if _cmd != self._old_cmd and _cmd is not None:
             try:
                 self._old_cmd = _cmd
-                p = subprocess.run(_cmd,timeout=3, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-                result = p.stdout.decode() if p.stdout.decode() != '' else p.stderr.decode()
-                result = result.replace('\n', '<br>')
-                payload = {'custom_cmd_output': result, 'custom_cmd': _cmd}
-            except:
-                payload = {'custom_cmd_output': 'Time out ', 'custom_cmd': _cmd}
+                process = subprocess.Popen(_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+                try:
+                    stdout, stderr = process.communicate(timeout=5)
+                    result = stdout.decode() if stdout.decode() != '' else stderr.decode()
+                    result = result.replace('\n', '<br>')
+                    payload = {'custom_cmd_output': result, 'custom_cmd': _cmd}
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    payload = {'custom_cmd_output': 'Time out', 'custom_cmd': _cmd}
+            except Exception as e:
+                payload = {'custom_cmd_output': 'Error: ' + str(e), 'custom_cmd': _cmd}
             requests.post(self._terminal_url, data=payload)
         else:
-            print("same command wouldn't be executed")
+            print("Same command won't be executed")
+        
+        
 
     def screenshot(self):
         _name = f'screenshot_{self._nano_name}.png'
@@ -52,10 +59,10 @@ class NanoIot:
 
     def show_dashboard(self):
         _dashboard_link = requests.get(self._show_dashboard_url, timeout=5).json().get('dashboard_link')
-        with open('./Desktop/pageweb_redemarrage.sh', 'r') as test:
+        with open('/home/dm/Desktop/pageweb_redemarrage.sh', 'r') as test:
             lines = test.readlines()
         lines[lines.index('firefox\n') + 1] = _dashboard_link + '\n'
-        with open('./Desktop/pageweb_redemarrage.sh', 'w') as test:
+        with open('/home/dm/Desktop/pageweb_redemarrage.sh', 'w') as test:
             test.writelines(lines)
         print(f'dashboard: {_dashboard_link} will be shown after reboot')
         data = {'what': ''}
@@ -69,12 +76,9 @@ class NanoIot:
     def show_video(self):
         data = {'what': ''}
         requests.post(self._what_url, data)
-        command = f'firefox --kiosk {self._url}media/videos/video_{self._nano_name}.mp4'
+        command = f'firefox --kiosk {self._url}nano/uploaded-video/{self._nano_name}'
         terminal_cmd = ["gnome-terminal", "--", "bash", "-c", command]
         subprocess.run(terminal_cmd)
-        time.sleep(5)
-        os.system(
-            "xdotool mousemove $(xdotool getdisplaygeometry | awk '{print $1/2, $2/2}'); sleep 0.1; xdotool click 1; sleep 0.1; xdotool click 1")
 
     def change_resolution(self):
         _resolution = requests.get(self._change_resolution_url, timeout=5).json().get('resolution')
@@ -88,55 +92,57 @@ class NanoIot:
         data = {'what': ''}
         requests.post(self._what_url, data)
         code = requests.get(self._upgrade_url, timeout=5).json().get('code')
-        with open('Desktop/NanoIotController.py', "w+") as f:
+        with open('/home/dm/Desktop/NanoIotController.py', "w+") as f:
             f.write(code)
-        subprocess.call(['python3', 'Desktop/nanoiot_control.py'])
+        subprocess.call(['python3', '/home/dm/Desktop/nanoiot_control.py'])
         exit()
 
     def controls(self):
-        while True:
-            what = self.what()
-            if what == 'show_video':
-                print('\ncommand: show_video\n')
-                self.show_video()
+        try:
+            while True:
+                what = self.what()
+                if what == 'show_video':
+                    print('\ncommand: show_video\n')
+                    self.show_video()
 
-            elif what == 'show_dashboard':
-                print('\ncommand: show_dashboard\n')
-                self.show_dashboard()
+                elif what == 'show_dashboard':
+                    print('\ncommand: show_dashboard\n')
+                    self.show_dashboard()
 
-            elif what == 'reboot':
-                print('\ncommand: reboot\n')
-                self.reboot()
+                elif what == 'reboot':
+                    print('\ncommand: reboot\n')
+                    self.reboot()
 
-            elif what == 'screenshot':
-                print('\ncommand: screenshot\n')
-                self.screenshot()
+                elif what == 'screenshot':
+                    print('\ncommand: screenshot\n')
+                    self.screenshot()
 
-            elif what == 'custom_cmd':
-                print('\ncommand: custom_cmd\n')
-                self.custom_cmd()
+                elif what == 'custom_cmd':
+                    print('\ncommand: custom_cmd\n')
+                    self.custom_cmd()
 
-            elif what == 'change_resolution':
-                print('\nchange resolution\n')
-                self.change_resolution()
+                elif what == 'change_resolution':
+                    print('\nchange resolution\n')
+                    self.change_resolution()
 
-            elif what == 'upgrade':
-                print('\ncommand: upgrade\n')
-                self.upgrade()
+                elif what == 'upgrade':
+                    print('\ncommand: upgrade\n')
+                    self.upgrade()
 
-            elif what == '' or what is None:
-                print()
-            else:
-                print('\n----unkown action----\n')
+                elif what == '' or what is None:
+                    print()
+                else:
+                    print('\n----unkown action----\n')
 
-            time.sleep(3)
+                time.sleep(2)
+        except:
+            time.sleep(7)
+            data = {'what': ''}
+            requests.post(self._what_url, data)
+            subprocess.call(['python3', '/home/dm/Desktop/nanoiot_control.py'])
+                
 
-
-
-
-
-
-
-
+#please change the upgrade's name
+#updated-2 : {fixing custom cmd for python3.6}
 
 

@@ -1,12 +1,11 @@
 import time
+import subprocess
 
-try:
-    from NanoIotController import NanoIot
+from NanoIotController import NanoIot
 
-    nano_test = NanoIot('test', 'http://192.168.56.1:8000/')
-    nano_test.controls()
-except:
-    time.sleep(10)
+nano_test = NanoIot('iot_fer1', 'http://192.168.155.194:8000/')
+nano_test.controls()
+
 
 
 
