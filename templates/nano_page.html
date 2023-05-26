@@ -277,13 +277,13 @@
                         data: {'what': '{{functionality}}'},
                         success: function (data) {
                             {% if functionality == 'custom_cmd'%}
-                                location.href = "/nano/{{ hostname }}/terminal";
+                                location.href = "{% url 'terminal' hostname %}";
                             {% endif %}
                             console.log('other else')
                             }
                         });
                     {% if functionality == 'screenshot' %}
-                        window.open("../nano/{{hostname}}/screenshot","bfs","fullscreen");
+                        window.open("{% url 'screenshot' hostname %}","bfs","fullscreen");
                     {% endif %}
             });
         {% endif %}

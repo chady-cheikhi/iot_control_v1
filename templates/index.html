@@ -75,7 +75,7 @@
                             <div id="{{ where.0.title }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                                 <div class="card-body">
                                     {% for nano in where.1 %}
-                                        <a class="dropdown-item" style="color: white" href="/nano/{{ nano }}">{{ nano.title }}</a>
+                                        <a class="dropdown-item" style="color: white" href="{% url 'nano' nano %}">{{ nano.title }}</a>
                                     {% endfor %}
                                 </div>
                             </div>

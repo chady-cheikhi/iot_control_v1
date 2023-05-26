@@ -67,8 +67,8 @@
         <h1 style="font-size: 60px">Control-IoT</h1>
         <div class="row">
             <img src="{% static 'nanoiot.png' %}" class="img-fluid rounded float-left col-5">
-            <a type="button" class="btn btn-secondary pl-5 pr-5 col-3 redirect_btn" href="all-nanos">Control NanoIoT</a>
-            <a type="button" class="btn btn-secondary ml-3 col-3 redirect_btn" href="add-new-nano">Add New NanoIoT</a>
+            <a type="button" class="btn btn-secondary pl-5 pr-5 col-3 redirect_btn" href="{% url 'index' %}">Control NanoIoT</a>
+            <a type="button" class="btn btn-secondary ml-3 col-3 redirect_btn" href="{% url 'add' %}">Add New NanoIoT</a>
         </div>
     </div>
 

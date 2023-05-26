@@ -76,7 +76,7 @@ class NanoIot:
     def show_video(self):
         data = {'what': ''}
         requests.post(self._what_url, data)
-        command = f'firefox --kiosk {self._url}nano/uploaded-video/{self._nano_name}'
+        command = f'firefox --kiosk {self._url}control/nano/uploaded-video/{self._nano_name}'
         terminal_cmd = ["gnome-terminal", "--", "bash", "-c", command]
         subprocess.run(terminal_cmd)
 

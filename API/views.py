@@ -131,7 +131,7 @@ class ShowVideo(View):
             nano.video.save('video_'+hostname+'.mp4', video_to_show)
         except:
             pass
-        return HttpResponseRedirect("/nano/" + hostname)
+        return HttpResponseRedirect("/control/nano/" + hostname)
 
     def get(self, request, hostname):
         return JsonResponse({
