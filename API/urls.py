@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import NanoTerminalData, IndexData, Screenshot, ShowDashboard, ChangeResolution, Upgrade, ShowVideo
+from .views import NanoTerminalData, IndexData, Screenshot, ShowDashboard, ChangeResolution, Upgrade, ShowVideo, FeedBack
 
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path('nano/<str:hostname>/change_resolution', ChangeResolution.as_view(), name='change_resolution'),
     path('nano/<str:hostname>/upgrade', Upgrade.as_view(), name='upgrade'),
     path('nano/<str:hostname>/show_video', ShowVideo.as_view(), name='show_video'),
+    path('nano/<str:hostname>/feedback', FeedBack.as_view(), name='feedback'),
 ]

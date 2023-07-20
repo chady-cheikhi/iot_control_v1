@@ -38,6 +38,9 @@ class NanoIoT(models.Model):
     resolution = models.CharField(max_length=20, choices=resolutions, default='1920x1080')
     code = models.TextField(max_length=100, null=True, blank=True)
     video = models.FileField(upload_to='videos/', blank=True, null=True)
+    feedback = models.CharField(max_length=255, default='', null= True)
+    time = models.CharField(max_length=255, default='', null= True)
+
 
     def __str__(self):
         return self.hostname

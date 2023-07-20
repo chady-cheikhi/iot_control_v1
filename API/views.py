@@ -1,4 +1,6 @@
 import os
+
+from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse, HttpResponse, Http404, HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -139,3 +141,18 @@ class ShowVideo(View):
             'video_link':  request.POST.get('video_link')
         })
 
+
+@method_decorator(csrf_exempt, name='dispatch')
+class FeedBack(View):
+    def post(self, request, hostname):
+        nano = NanoIoT.objects.all().get(hostname=hostname)
+        nano.feedback = request.POST.get('feedback')
+        nano.time = request.POST.get('time')
+        nano.save()
+        print(nano.feedback)
+        return JsonResponse({})
+
+    def get(self, request, hostname):
+        nano = NanoIoT.objects.all().get(hostname=hostname)
+        return JsonResponse({'feedback': nano.feedback,
+                             'time': nano.time})
